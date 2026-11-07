@@ -1,0 +1,92 @@
+/* layout.css — Structural Layout & Grid Rhythm */
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--content-padding);
+  padding-right: var(--content-padding);
+}
+
+.section {
+  padding-top: var(--space-20);
+  padding-bottom: var(--space-20);
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-12);
+  }
+}
+
+.section-header {
+  margin-bottom: var(--space-12);
+}
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: var(--space-1) var(--space-3);
+  background: var(--bg-glass-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-3);
+}
+
+.section-title {
+  font-size: var(--font-3xl);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.section-subtitle {
+  font-size: var(--font-lg);
+  color: var(--text-secondary);
+  max-width: 680px;
+  line-height: 1.6;
+}
+
+/* Grids */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+
+@media (max-width: 900px) {
+  .grid-2, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Flex Helpers */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

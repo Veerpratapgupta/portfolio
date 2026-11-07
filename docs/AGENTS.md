@@ -113,7 +113,39 @@ herdr pane list
 
 ---
 
-## 5. Handoff & Quality Gates
+## 5. Pull Request & Automated Code Review Protocol
+
+To ensure top quality before merging features into `main`:
+
+1. **Branch Convention**:
+   - `feat/<phase-name>` (e.g. `feat/phase1-scaffold`, `feat/phase2-nav-hero`)
+   - `fix/<issue-name>`
+
+2. **Pre-PR Local Review with CodeRabbit CLI**:
+   Before pushing or opening a PR, the agent or developer runs:
+   ```bash
+   # Review uncommitted changes or working branch against main
+   coderabbit review --base main
+
+   # Structured findings for agent automated remediation
+   coderabbit review --agent --gate major
+   ```
+
+3. **Opening Pull Requests via GitHub CLI (`gh`)**:
+   ```bash
+   git push -u origin <branch-name>
+   gh pr create --title "feat: <title>" --body "Closes Phase X from PLAN.md"
+   ```
+
+4. **Review Inspection**:
+   ```bash
+   coderabbit pullrequest <pr-number-or-url>
+   gh pr checks
+   ```
+
+---
+
+## 6. Handoff & Quality Gates
 
 Before any phase is marked as completed in `PLAN.md`:
 

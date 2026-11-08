@@ -7,18 +7,22 @@ export const siteConfig = {
   handle: "Veer",
   title: "Systems, Full-Stack & Autonomous AI Systems Engineer",
   tagline: "Architecting resilient distributed backends, ultra-lean Linux systems, and collaborative multi-agent coding workflows.",
+  url: "https://veerpratap.dev/", // TODO: Replace with your custom Vercel domain
+  ogImage: "og-image.png",
+  headline: "Engineering high-performance",
+  headlineAccent: "systems, backends & autonomous agents",
   availability: "Available for Senior, Staff & Founding Engineer Roles",
   location: "India / Remote Worldwide",
   email: "veerpratap712720@gmail.com",
   github: "https://github.com/Veerpratapgupta",
   linkedin: "https://linkedin.com/in/veerpratapgupta",
   twitter: "https://x.com/veerpratapgupta",
-  resumeUrl: "#contact", // or PDF download
+  resumeUrl: "", // Set to a PDF path when available
   stats: [
     { label: "Systems Architecture", value: "Low-Latency & Concurrency" },
     { label: "Autonomous AI Agents", value: "Multi-Agent Orchestration" },
     { label: "Linux Mastery", value: "Kernel, BSPWM & Memory Optimization" },
-    { label: "Web Performance", value: "Sub-100ms TTI & Zero Runtime Bloat" }
+    { label: "Web Performance", value: "21.5KB gz & Zero Framework Runtime" }
   ],
   bio: [
     "I'm a systems and full-stack engineer driven by an obsession with performance, minimal memory footprints, and architectural elegance.",
@@ -28,7 +32,7 @@ export const siteConfig = {
   principles: [
     {
       title: "Obsession with Latency & Footprint",
-      description: "Whether tuning an operating system to idle under 180MB RAM or designing zero-runtime web interfaces, efficiency is non-negotiable."
+      description: "Whether tuning an operating system to idle under 190MB RAM or designing zero-runtime web interfaces, efficiency is non-negotiable."
     },
     {
       title: "Deep Modules & Clean Seams",

@@ -36,3 +36,6 @@ Thumbs.db
 # Temporary / test files
 coverage/
 .temp/
+
+# Vercel
+.vercel/

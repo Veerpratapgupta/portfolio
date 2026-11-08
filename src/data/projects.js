@@ -15,8 +15,9 @@ export const projects = [
     ],
     metrics: "3x Parallel Dev Velocity · 0% Context Loss",
     tags: ["Rust", "Python", "Unix Sockets", "Multiplexing", "LLM Tool Calling", "SQLite"],
-    repoUrl: "https://github.com/Veerpratapgupta/portfolio",
-    demoUrl: "https://github.com/Veerpratapgupta/portfolio",
+    repoUrl: "",
+    demoUrl: "",
+    caseStudy: true,
     featured: true,
     badge: "Core Project"
   },
@@ -32,8 +33,9 @@ export const projects = [
     ],
     metrics: "60% Faster Boot · <190MB Idle RAM",
     tags: ["Linux", "Void Linux", "Shell / Zsh", "BSPWM", "Kernel Tuning", "SysAdmin"],
-    repoUrl: "https://github.com/Veerpratapgupta",
-    demoUrl: "https://github.com/Veerpratapgupta",
+    repoUrl: "",
+    demoUrl: "",
+    caseStudy: true,
     featured: true,
     badge: "Systems"
   },
@@ -49,8 +51,9 @@ export const projects = [
     ],
     metrics: "10Gbps Capable · Zero Drop Recovery",
     tags: ["Go", "Node.js", "FFmpeg", "Shell", "Concurrency", "Streaming"],
-    repoUrl: "https://github.com/Veerpratapgupta",
-    demoUrl: "https://github.com/Veerpratapgupta",
+    repoUrl: "",
+    demoUrl: "",
+    caseStudy: true,
     featured: true,
     badge: "Backend"
   },
@@ -66,8 +69,9 @@ export const projects = [
     ],
     metrics: "100% Pre-Commit Pass Rate",
     tags: ["TypeScript", "Python", "GitHub CLI", "CodeRabbit", "TDD", "CI/CD"],
-    repoUrl: "https://github.com/Veerpratapgupta/portfolio",
-    demoUrl: "https://github.com/Veerpratapgupta/portfolio",
+    repoUrl: "",
+    demoUrl: "",
+    caseStudy: true,
     featured: true,
     badge: "DevOps"
   },
@@ -77,14 +81,14 @@ export const projects = [
     category: "Full-Stack & Web",
     description: "This portfolio website: engineered with modern Vanilla ES Modules, CSS custom properties, and Vite. Implements zero Flash of Unstyled Theme (FOUT), interactive client-side terminal, and 60fps canvas micro-interactions.",
     highlights: [
-      "100/100 Lighthouse Performance, Accessibility, and Best Practices score",
+      "Build-time semantic HTML with progressive enhancement for every interaction",
       "Synchronous pre-paint head execution eliminating all theme flicker",
-      "Zero client-side framework runtime overhead (<12KB gzipped total assets)"
+      "21.5KB gzipped total (HTML + CSS + JS) with zero client-side framework runtime"
     ],
-    metrics: "100 Lighthouse · <12KB Total Bundle",
+    metrics: "21.5KB gz Total · Zero Framework Runtime",
     tags: ["Vite", "ES Modules", "CSS Tokens", "Vanilla JS", "WCAG AA", "Web Audio / Canvas"],
     repoUrl: "https://github.com/Veerpratapgupta/portfolio",
-    demoUrl: "https://github.com/Veerpratapgupta/portfolio",
+    demoUrl: "https://veerpratapgupta.github.io/portfolio/",
     featured: false,
     badge: "Frontend"
   }

@@ -3,6 +3,8 @@
  */
 
 export function triggerConfetti(originX = window.innerWidth / 2, originY = window.innerHeight / 2) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
   const canvas = document.createElement("canvas");
   canvas.style.position = "fixed";
   canvas.style.top = "0";
@@ -13,9 +15,12 @@ export function triggerConfetti(originX = window.innerWidth / 2, originY = windo
   canvas.style.zIndex = "9999";
   document.body.appendChild(canvas);
 
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.round(window.innerWidth * dpr);
+  canvas.height = Math.round(window.innerHeight * dpr);
+
   const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
   const colors = ["#6366f1", "#3b82f6", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6"];
   const particles = [];

@@ -1,6 +1,8 @@
 /* tokens.css — Modern Design System Tokens */
 
 :root {
+  color-scheme: dark;
+
   /* Color Palette — Dark Theme Default */
   --bg-body: #07090e;
   --bg-surface: #0f121a;
@@ -10,19 +12,29 @@
   --bg-glass-subtle: rgba(255, 255, 255, 0.03);
 
   /* Primary Accent & Glow */
-  --accent-primary: #6366f1;           /* Electric Indigo */
+  --accent-primary: #5b5ee8;           /* Electric Indigo (AA on white text) */
   --accent-secondary: #3b82f6;         /* Cyber Blue */
   --accent-emerald: #10b981;           /* Terminal Emerald */
   --accent-amber: #f59e0b;             /* Warning / Alert Amber */
   --accent-gradient: linear-gradient(135deg, #6366f1 0%, #3b82f6 50%, #10b981 100%);
   --accent-glow: rgba(99, 102, 241, 0.22);
+  --accent-text: #818cf8;              /* AA-safe indigo for text on dark surfaces */
   --emerald-glow: rgba(16, 185, 129, 0.25);
 
   /* Text & Typography */
   --text-primary: #f8fafc;             /* Bright crisp white */
   --text-secondary: #94a3b8;           /* Muted slate gray */
-  --text-muted: #64748b;               /* Deep muted gray */
+  --text-muted: #8b98ad;               /* AA-safe muted gray on all dark surfaces */
   --text-inverse: #0f172a;
+
+  /* Terminal — intentionally dark in both themes */
+  --terminal-bg: #090c13;
+  --terminal-header-bg: #0f1420;
+  --terminal-text: #f8fafc;
+  --terminal-text-secondary: #cbd5e1;
+  --terminal-muted: #8b98ad;
+  --terminal-accent: #a5b4fc;
+  --terminal-emerald: #34d399;
 
   /* Borders & Dividers */
   --border-subtle: rgba(255, 255, 255, 0.08);
@@ -85,6 +97,8 @@
 
 /* Light Theme Override */
 [data-theme="light"] {
+  color-scheme: light;
+
   --bg-body: #f8fafc;
   --bg-surface: #ffffff;
   --bg-surface-elevated: #f1f5f9;
@@ -94,14 +108,15 @@
 
   --accent-primary: #4f46e5;
   --accent-secondary: #2563eb;
-  --accent-emerald: #059669;
+  --accent-emerald: #047857;
   --accent-amber: #d97706;
   --accent-glow: rgba(79, 70, 229, 0.15);
+  --accent-text: #4338ca;
   --emerald-glow: rgba(5, 150, 105, 0.15);
 
   --text-primary: #090d16;
   --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-muted: #556277;
   --text-inverse: #f8fafc;
 
   --border-subtle: rgba(0, 0, 0, 0.08);

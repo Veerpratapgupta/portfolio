@@ -76,12 +76,13 @@ ${siteConfig.bio.join("\n\n")}
 
       case "agents":
         appendLine(`
-<strong>Herdr Multi-Agent Live Topology:</strong>
-  [Pane w3:p1] <strong>agy</strong> (Antigravity CLI) - Orchestrator & QA Lead [WORKING]
-  [Pane w3:p2] <strong>architect</strong> (OpenCode)   - System & Token Architect [IDLE]
-  [Pane w3:p3] <strong>developer</strong> (OpenCode)   - Implementation Lead [ACTIVE]
-  
-Status: Zero-loss context synchronization active via SQLite & Herdr IPC.
+<strong>Herdr Multi-Agent Topology:</strong>
+  Orchestrator  - Planning, QA & release gating
+  Architect     - System design, tokens & interfaces
+  Developer     - Implementation & test loops
+  Reviewer      - Standards, spec & accessibility audits
+
+Coordination: Herdr panes, explicit handoffs, and zero-loss session recovery.
         `);
         break;
 
@@ -97,16 +98,16 @@ Status: Zero-loss context synchronization active via SQLite & Herdr IPC.
                   <strong>WM:</strong> BSPWM + SXHKD + Picom (GLX shaders)
                   <strong>Shell:</strong> zsh + starship prompt
                   <strong>Terminal:</strong> Alacritty / Herdr multiplexer
-                  <strong>Memory:</strong> 180MB / 16GB (Zram enabled)
+                  <strong>Memory:</strong> 190MB / 16GB (Zram enabled)
 </span>
         `);
         break;
 
       case "contact":
         appendLine(`
-Email:    <a href="mailto:${siteConfig.email}" style="color: var(--accent-primary);">${siteConfig.email}</a>
-GitHub:   <a href="${siteConfig.github}" target="_blank" style="color: var(--accent-primary);">${siteConfig.github}</a>
-LinkedIn: <a href="${siteConfig.linkedin}" target="_blank" style="color: var(--accent-primary);">${siteConfig.linkedin}</a>
+Email:    <a href="mailto:${siteConfig.email}" class="term-link">${siteConfig.email}</a>
+GitHub:   <a href="${siteConfig.github}" target="_blank" rel="noopener noreferrer" class="term-link">${siteConfig.github}</a>
+LinkedIn: <a href="${siteConfig.linkedin}" target="_blank" rel="noopener noreferrer" class="term-link">${siteConfig.linkedin}</a>
         `);
         break;
 
@@ -117,7 +118,7 @@ LinkedIn: <a href="${siteConfig.linkedin}" target="_blank" style="color: var(--a
 🎉 Let's build something extraordinary together!
 </span>
 I'm actively considering Senior, Staff, and Founding Engineer roles.
-Shoot an email directly to <a href="mailto:${siteConfig.email}" style="color: var(--accent-primary); text-decoration: underline;">${siteConfig.email}</a> to schedule a chat.
+Shoot an email directly to <a href="mailto:${siteConfig.email}" class="term-link term-link-underline">${siteConfig.email}</a> to schedule a chat.
         `);
         break;
 
@@ -133,7 +134,12 @@ Shoot an email directly to <a href="mailto:${siteConfig.email}" style="color: va
   }
 
   function escapeHtml(str) {
-    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   terminalInput.addEventListener("keydown", (e) => {
@@ -167,6 +173,4 @@ Shoot an email directly to <a href="mailto:${siteConfig.email}" style="color: va
     });
   });
 
-  // Initial welcome message
-  appendLine(`System initialized. Type <span style="color: var(--accent-emerald);">help</span> or click quick actions below to explore.`);
 }

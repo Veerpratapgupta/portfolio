@@ -1,15 +1,20 @@
 /**
- * palette.js — Global Cmd+K / Ctrl+K Command Palette.
+ * palette.js — Accessible Cmd+K / Ctrl+K command palette.
+ * Implements focus trapping, focus restore, arrow-key navigation,
+ * scroll locking, and reduced-motion-aware scrolling.
  */
 
 import { siteConfig } from "../data/site.js";
 import { triggerConfetti } from "./confetti.js";
+import { toggleTheme } from "./theme.js";
 
 export function initCommandPalette() {
   const modal = document.getElementById("palette-modal");
   const input = document.getElementById("palette-input");
   const list = document.getElementById("palette-list");
   const triggerBtn = document.getElementById("palette-trigger-btn");
+  const mobileTriggerBtn = document.getElementById("mobile-palette-btn");
+  const mobileNav = document.getElementById("mobile-nav");
   if (!modal || !input || !list) return;
 
   const actions = [
@@ -21,93 +26,196 @@ export function initCommandPalette() {
     { title: "Toggle Dark / Light Theme", action: "toggle-theme", category: "Preferences" },
     { title: "Copy Email Address", action: "copy-email", category: "Contact" },
     { title: "View GitHub Profile", url: siteConfig.github, category: "External" },
-    { title: "Celebration Confetti 🎉", action: "confetti", category: "Fun" }
+    { title: "Celebration Confetti 🎉", action: "confetti", category: "Fun" },
   ];
 
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let previousFocus = null;
+  let filtered = actions;
+
+  const isOpen = () => modal.classList.contains("open");
+
   function openPalette() {
-    modal.classList.add("open");
+    if (isOpen()) return;
+
+    previousFocus = document.activeElement;
     input.value = "";
-    renderList(actions);
-    setTimeout(() => input.focus(), 50);
+    filtered = actions;
+    renderList(filtered);
+
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("palette-open");
+    triggerBtn?.setAttribute("aria-expanded", "true");
+
+    input.focus();
+    if (document.activeElement !== input) {
+      requestAnimationFrame(() => {
+        if (isOpen()) input.focus();
+      });
+    }
   }
 
-  function closePalette() {
+  function isFocusableVisible(element) {
+    if (!element?.isConnected) return false;
+    if (element.closest("details:not([open])") && !element.matches("summary")) return false;
+    return element.offsetParent !== null;
+  }
+
+  function closePalette({ restoreFocus = true } = {}) {
+    if (!isOpen()) return;
+
     modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("palette-open");
+    triggerBtn?.setAttribute("aria-expanded", "false");
+
+    if (restoreFocus) {
+      const candidates = [
+        previousFocus,
+        triggerBtn,
+        mobileTriggerBtn,
+        document.querySelector(".mobile-nav-toggle"),
+      ];
+      const target = candidates.find(isFocusableVisible);
+      target?.focus();
+    }
+    previousFocus = null;
   }
 
   function renderList(items) {
     list.innerHTML = "";
+
     if (items.length === 0) {
-      list.innerHTML = `<li style="padding: 1rem; color: var(--text-muted); text-align: center;">No matching commands found.</li>`;
+      const empty = document.createElement("li");
+      empty.className = "palette-empty";
+      empty.textContent = "No matching commands found.";
+      list.appendChild(empty);
       return;
     }
 
     items.forEach((item, index) => {
       const li = document.createElement("li");
-      li.className = `palette-item ${index === 0 ? "selected" : ""}`;
-      li.innerHTML = `
-        <span>${item.title}</span>
-        <span class="kbd-badge">${item.category}</span>
-      `;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "palette-item";
+      if (index === 0) button.classList.add("selected");
+      button.innerHTML = `<span>${item.title}</span><span class="kbd-badge">${item.category}</span>`;
 
-      li.addEventListener("click", () => {
-        executeItem(item);
+      button.addEventListener("focus", () => {
+        list.querySelectorAll(".palette-item").forEach((el) => el.classList.remove("selected"));
+        button.classList.add("selected");
       });
+      button.addEventListener("click", () => executeItem(item));
+
+      li.appendChild(button);
       list.appendChild(li);
     });
   }
 
   function executeItem(item) {
-    closePalette();
+    closePalette({ restoreFocus: false });
+
     if (item.section) {
-      const el = document.querySelector(item.section);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      const target = document.querySelector(item.section);
+      target?.scrollIntoView({
+        behavior: prefersReduced.matches ? "auto" : "smooth",
+        block: "start",
+      });
     } else if (item.url) {
-      window.open(item.url, "_blank");
+      window.open(item.url, "_blank", "noopener,noreferrer");
     } else if (item.action === "toggle-theme") {
-      const current = document.documentElement.getAttribute("data-theme") || "dark";
-      const next = current === "dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", next);
-      localStorage.setItem("theme", next);
+      toggleTheme();
     } else if (item.action === "copy-email") {
-      navigator.clipboard.writeText(siteConfig.email);
-      triggerConfetti();
+      navigator.clipboard
+        .writeText(siteConfig.email)
+        .then(() => triggerConfetti())
+        .catch(() => {
+          window.location.href = `mailto:${siteConfig.email}`;
+        });
     } else if (item.action === "confetti") {
       triggerConfetti();
     }
   }
 
-  // Filter input
   input.addEventListener("input", () => {
     const query = input.value.toLowerCase().trim();
-    const filtered = actions.filter(
-      (a) => a.title.toLowerCase().includes(query) || a.category.toLowerCase().includes(query)
+    filtered = actions.filter(
+      (action) =>
+        action.title.toLowerCase().includes(query) ||
+        action.category.toLowerCase().includes(query)
     );
     renderList(filtered);
   });
 
-  // Keyboard shortcut listener (Cmd+K or Ctrl+K)
-  window.addEventListener("keydown", (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-      e.preventDefault();
-      if (modal.classList.contains("open")) {
-        closePalette();
-      } else {
-        openPalette();
+  modal.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && document.activeElement === input) {
+      const selected = list.querySelector(".palette-item.selected") || list.querySelector(".palette-item");
+      if (selected) {
+        event.preventDefault();
+        selected.click();
       }
-    } else if (e.key === "Escape" && modal.classList.contains("open")) {
-      closePalette();
+      return;
+    }
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      const buttons = Array.from(list.querySelectorAll(".palette-item"));
+      if (!buttons.length) return;
+      event.preventDefault();
+
+      const down = event.key === "ArrowDown";
+      const current = buttons.indexOf(document.activeElement);
+      const next =
+        current === -1
+          ? (down ? 0 : buttons.length - 1)
+          : (current + (down ? 1 : -1) + buttons.length) % buttons.length;
+      buttons[next].focus();
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+
+    const focusable = Array.from(
+      modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((element) => !element.disabled && element.offsetParent !== null);
+
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   });
 
-  // Modal backdrop click
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && isOpen()) {
+      event.preventDefault();
       closePalette();
+      return;
+    }
+
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      event.preventDefault();
+      isOpen() ? closePalette() : openPalette();
     }
   });
 
-  if (triggerBtn) {
-    triggerBtn.addEventListener("click", openPalette);
-  }
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) closePalette();
+  });
+
+  triggerBtn?.addEventListener("click", openPalette);
+
+  mobileTriggerBtn?.addEventListener("click", () => {
+    if (mobileNav) mobileNav.open = false;
+    openPalette();
+  });
 }
